@@ -21,31 +21,27 @@
       text-align: center;
     }
 
-    .title {
-      font-size: 4rem;
-      font-weight: 900;
-      color: #ff8a5c;
-      text-shadow: 2px 2px #d84526;
-      position: relative;
-    }
-
-    .title span {
-      display: block;
-      line-height: 1.2;
+    .title img {
+      max-width: 90vw;
+      height: auto;
     }
 
     .airplane {
       width: 40px;
       position: absolute;
-      top: -30px;
-      left: -50px;
-      animation: fly 6s linear infinite;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: flyaround 12s linear infinite;
+      opacity: 1;
     }
 
-    @keyframes fly {
-      0%   { transform: translateX(0) rotate(10deg); }
-      50%  { transform: translateX(100vw) rotate(-10deg); }
-      100% { transform: translateX(0) rotate(10deg); }
+    @keyframes flyaround {
+      0%   { transform: translate(-50%, -50%) rotate(0deg) translateX(120px) rotate(0deg); }
+      25%  { transform: translate(-50%, -50%) rotate(90deg) translateX(120px) rotate(-90deg); }
+      50%  { transform: translate(-50%, -50%) rotate(180deg) translateX(120px) rotate(-180deg); }
+      75%  { transform: translate(-50%, -50%) rotate(270deg) translateX(120px) rotate(-270deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg) translateX(120px) rotate(-360deg); }
     }
 
     .countdown {
@@ -68,45 +64,81 @@
       color: #888;
       margin-top: 5px;
     }
+
+    .celebration {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #d84526;
+      animation: pop 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes pop {
+      from { transform: scale(1); opacity: 0.7; }
+      to { transform: scale(1.2); opacity: 1; }
+    }
+
+    .button {
+      margin-top: 40px;
+      padding: 12px 24px;
+      background-color: #ff8a5c;
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #d84526;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="title">
-      <img src="./postman drop.gif" class="airplane" alt="airplane" />
-      <span>THE MOM</span>
-      <span>DROP</span>
+      <img src="momdrop.png" alt="The Mom Drop Title Design" />
+      <img src="airplane.png" class="airplane" alt="airplane" />
     </div>
 
-    <div class="countdown">
-      <div class="unit">
-        <div id="days">00</div>
-        <div class="label">Days</div>
-      </div>
-      <div class="unit">
-        <div id="hours">00</div>
-        <div class="label">Hours</div>
-      </div>
-      <div class="unit">
-        <div id="minutes">00</div>
-        <div class="label">Minutes</div>
-      </div>
-      <div class="unit">
-        <div id="seconds">00</div>
-        <div class="label">Seconds</div>
+    <div id="countdown-section">
+      <div class="countdown">
+        <div class="unit">
+          <div id="days">00</div>
+          <div class="label">Days</div>
+        </div>
+        <div class="unit">
+          <div id="hours">00</div>
+          <div class="label">Hours</div>
+        </div>
+        <div class="unit">
+          <div id="minutes">00</div>
+          <div class="label">Minutes</div>
+        </div>
+        <div class="unit">
+          <div id="seconds">00</div>
+          <div class="label">Seconds</div>
+        </div>
       </div>
     </div>
+
+    <button class="button" onclick="window.open('https://fr.flightaware.com/live/flight/DAH2702/history/20250706/0515Z/DAAG/CYUL', '_blank')">
+      Check Flight Status
+    </button>
   </div>
 
   <script>
-    const targetDate = new Date("2025-07-13T09:00:00").getTime();
+    const montrealTimeString = "2025-07-13T10:00:00-04:00";
+    const targetDate = new Date(montrealTimeString);
 
     function updateCountdown() {
       const now = new Date().getTime();
-      const distance = targetDate - now;
+      const distance = targetDate.getTime() - now;
 
       if (distance < 0) {
-        document.querySelector('.countdown').innerHTML = "🎉 She's here!";
+        document.getElementById("countdown-section").innerHTML =
+          '<div class="celebration">🎉 She\'s here! Welcome, Mom! 🧡</div>';
         return;
       }
 
