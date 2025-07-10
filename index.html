@@ -7,7 +7,7 @@
   <style>
     body {
       margin: 0;
-      background-color: #ffe7d1;
+      background-color: #ffe7bd;
       font-family: 'Segoe UI', sans-serif;
       overflow: hidden;
     }
@@ -22,27 +22,33 @@
     }
 
     .title img {
-      max-width: 90vw;
+      max-width: 20vw;
       height: auto;
     }
 
-    .airplane {
-      width: 40px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: flyaround 12s linear infinite;
-      opacity: 1;
-    }
+      .airplane {
+  width: 40px;
+  position: absolute;
+  top: 45%;
+  left: -60px;
+  animation: flyRight 12s linear infinite;
+  opacity: 1;
+  z-index: 10;
+}
 
-    @keyframes flyaround {
-      0%   { transform: translate(-50%, -50%) rotate(0deg) translateX(120px) rotate(0deg); }
-      25%  { transform: translate(-50%, -50%) rotate(90deg) translateX(120px) rotate(-90deg); }
-      50%  { transform: translate(-50%, -50%) rotate(180deg) translateX(120px) rotate(-180deg); }
-      75%  { transform: translate(-50%, -50%) rotate(270deg) translateX(120px) rotate(-270deg); }
-      100% { transform: translate(-50%, -50%) rotate(360deg) translateX(120px) rotate(-360deg); }
-    }
+   @keyframes flyRight {
+  0%   { transform: translate(-60px, 0); }
+  10%  { transform: translate(10vw, -5px); }
+  20%  { transform: translate(20vw, 8px); }
+  30%  { transform: translate(30vw, -12px); }
+  40%  { transform: translate(40vw, 5px); }
+  50%  { transform: translate(50vw, -7px); }
+  60%  { transform: translate(60vw, 10px); }
+  70%  { transform: translate(70vw, -10px); }
+  80%  { transform: translate(80vw, 6px); }
+  90%  { transform: translate(90vw, -4px); }
+  100% { transform: translate(100vw, 0); }
+}
 
     .countdown {
       margin-top: 30px;
@@ -78,7 +84,7 @@
     }
 
     .button {
-      margin-top: 40px;
+      margin-top: 20px;
       padding: 12px 24px;
       background-color: #ff8a5c;
       color: white;
@@ -93,43 +99,73 @@
     .button:hover {
       background-color: #d84526;
     }
+
+     .toggle-button.active {
+      background-color: #5cb85c;
+    }
+
+    .toggle-button.inactive {
+      background-color: #d9534f;
+    }
   </style>
 </head>
 <body>
+    <audio id="airSound" autoplay muted loop>
+    <source src="airplane-sound1.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
   <div class="container">
     <div class="title">
       <img src="momdrop.png" alt="The Mom Drop Title Design" />
       <img src="airplane.png" class="airplane" alt="airplane" />
     </div>
 
-    <div id="countdown-section">
-      <div class="countdown">
-        <div class="unit">
-          <div id="days">00</div>
-          <div class="label">Days</div>
-        </div>
-        <div class="unit">
-          <div id="hours">00</div>
-          <div class="label">Hours</div>
-        </div>
-        <div class="unit">
-          <div id="minutes">00</div>
-          <div class="label">Minutes</div>
-        </div>
-        <div class="unit">
-          <div id="seconds">00</div>
-          <div class="label">Seconds</div>
-        </div>
+      <div class="countdown" id="countdown">
+      <div class="unit">
+        <div id="days">00</div>
+        <div class="label">Days</div>
+      </div>
+      <div class="unit">
+        <div id="hours">00</div>
+        <div class="label">Hours</div>
+      </div>
+      <div class="unit">
+        <div id="minutes">00</div>
+        <div class="label">Minutes</div>
+      </div>
+      <div class="unit">
+        <div id="seconds">00</div>
+        <div class="label">Seconds</div>
       </div>
     </div>
 
-    <button class="button" onclick="window.open('https://fr.flightaware.com/live/flight/DAH2702/history/20250706/0515Z/DAAG/CYUL', '_blank')">
+     <button id="soundToggle" class="button toggle-button active" onclick="toggleSound()">🔊 Sound On</button>
+    <button class="button" onclick="window.open('https://www.flightaware.com/live/flight/DAH2702', '_blank')">
       Check Flight Status
     </button>
   </div>
 
   <script>
     const montrealTimeString = "2025-07-13T10:00:00-04:00";
+    const countdownContainer = document.getElementById("countdown");
+    const soundToggleBtn = document.getElementById("soundToggle");
+
+    function launchConfetti() {
+      const emojis = ['🎉','✨','🌟','🎈','🥳'];
+      for (let i = 0; i < 30; i++) {
+        const confetto = document.createElement('div');
+        confetto.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        confetto.style.position = 'fixed';
+        confetto.style.left = `${Math.random() * 100}vw`;
+        confetto.style.top = `-2rem`;
+        confetto.style.fontSize = '2rem';
+        confetto.style.animation = `drop ${Math.random() * 2 + 3}s linear forwards`;
+        document.body.appendChild(confetto);
+
+        setTimeout(() => confetto.remove(), 6000);
+      }
+    }
     const targetDate = new Date(montrealTimeString);
 
     function updateCountdown() {
@@ -137,9 +173,8 @@
       const distance = targetDate.getTime() - now;
 
       if (distance < 0) {
-        document.getElementById("countdown-section").innerHTML =
-          '<div class="celebration">🎉 She\'s here! Welcome, Mom! 🧡</div>';
-        return;
+        countdownContainer.innerHTML = '<div class="celebration">🎉 She\'s here! Welcome, Mom! 🧡</div>';
+        launchConfetti();return;
       }
 
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -152,9 +187,33 @@
       document.getElementById("minutes").textContent = minutes;
       document.getElementById("seconds").textContent = seconds;
     }
+  function toggleSound() {
+      const audio = document.getElementById('airSound');
+      const isMuted = audio.muted = !audio.muted;
 
+      if (isMuted) {
+        soundToggleBtn.classList.remove('active');
+        soundToggleBtn.classList.add('inactive');
+        soundToggleBtn.textContent = '🔇 Sound Off';
+      } else {
+        soundToggleBtn.classList.remove('inactive');
+        soundToggleBtn.classList.add('active');
+        soundToggleBtn.textContent = '🔊 Sound On';
+      }
+    }
     updateCountdown();
     setInterval(updateCountdown, 1000);
+
+      const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes drop {
+        to {
+          transform: translateY(120vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
   </script>
 </body>
 </html>
