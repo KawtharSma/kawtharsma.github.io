@@ -117,10 +117,13 @@
   </style>
 </head>
 <body>
-    <audio id="airSound" autoplay muted loop>
+  <audio id="airSound" loop muted>
+  <source src="airplane-sound1.mp3" type="audio/mpeg" />
+</audio>
+    <!--audio id="airSound" autoplay muted loop>
     <source src="airplane-sound1.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
-  </audio>
+  </audio-->
 
   <div class="container">
     <div class="title">
@@ -195,7 +198,36 @@
       document.getElementById("minutes").textContent = minutes;
       document.getElementById("seconds").textContent = seconds;
     }
-  function toggleSound() {
+    function toggleSound() {
+  const audio = document.getElementById('airSound');
+  const isMuted = audio.muted = !audio.muted;
+ 
+
+  if (!audio.muted) {
+    audio.play().catch(err => console.log('Playback blocked:', err));
+  }
+
+  // Update button UI
+  if (isMuted) {
+    soundToggleBtn.classList.remove('active');
+    soundToggleBtn.classList.add('inactive');
+    soundToggleBtn.textContent = '🔇 Sound Off';
+  } else {
+    soundToggleBtn.classList.remove('inactive');
+    soundToggleBtn.classList.add('active');
+    soundToggleBtn.textContent = '🔊 Sound On';
+  }
+}
+document.addEventListener("click", () => {
+  const audio = document.getElementById("airSound");
+  if (audio.muted) {
+    audio.muted = false;
+    audio.play().catch(() => {});
+  }
+}, { once: true });
+
+
+  /*function toggleSound() {
       const audio = document.getElementById('airSound');
       const isMuted = audio.muted = !audio.muted;
 
@@ -208,7 +240,7 @@
         soundToggleBtn.classList.add('active');
         soundToggleBtn.textContent = '🔊 Sound On';
       }
-    }
+    }*/
     updateCountdown();
     setInterval(updateCountdown, 1000);
 
