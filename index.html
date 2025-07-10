@@ -2,78 +2,111 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Countdown Timer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Mom Drop</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      margin: 0;
+      background-color: #ffe7d1;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    .container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
-      margin: 0;
+      text-align: center;
     }
 
-    h1 {
+    .title {
+      font-size: 4rem;
+      font-weight: 900;
+      color: #ff8a5c;
+      text-shadow: 2px 2px #d84526;
+      position: relative;
+    }
+
+    .title span {
+      display: block;
+      line-height: 1.2;
+    }
+
+    .airplane {
+      width: 40px;
+      position: absolute;
+      top: -30px;
+      left: -50px;
+      animation: fly 6s linear infinite;
+    }
+
+    @keyframes fly {
+      0%   { transform: translateX(0) rotate(10deg); }
+      50%  { transform: translateX(100vw) rotate(-10deg); }
+      100% { transform: translateX(0) rotate(10deg); }
+    }
+
+    .countdown {
+      margin-top: 30px;
+      display: flex;
+      gap: 20px;
+      font-size: 2rem;
       color: #333;
     }
 
-    #countdown {
-      display: flex;
-      gap: 15px;
-      font-size: 2rem;
-      margin-top: 20px;
-    }
-
-    .time-box {
-      background: #fff;
-      padding: 15px 25px;
+    .unit {
+      background: #fff6ef;
+      padding: 15px 20px;
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      text-align: center;
     }
 
     .label {
       font-size: 0.8rem;
-      color: #777;
+      color: #888;
       margin-top: 5px;
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <div class="title">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Airplane_silhouette.png" class="airplane" alt="airplane" />
+      <span>THE MOM</span>
+      <span>DROP</span>
+    </div>
 
-  <h1>Countdown to Special Date 🎉</h1>
-  <div id="countdown">
-    <div class="time-box">
-      <div id="days">0</div>
-      <div class="label">Days</div>
-    </div>
-    <div class="time-box">
-      <div id="hours">0</div>
-      <div class="label">Hours</div>
-    </div>
-    <div class="time-box">
-      <div id="minutes">0</div>
-      <div class="label">Minutes</div>
-    </div>
-    <div class="time-box">
-      <div id="seconds">0</div>
-      <div class="label">Seconds</div>
+    <div class="countdown">
+      <div class="unit">
+        <div id="days">00</div>
+        <div class="label">Days</div>
+      </div>
+      <div class="unit">
+        <div id="hours">00</div>
+        <div class="label">Hours</div>
+      </div>
+      <div class="unit">
+        <div id="minutes">00</div>
+        <div class="label">Minutes</div>
+      </div>
+      <div class="unit">
+        <div id="seconds">00</div>
+        <div class="label">Seconds</div>
+      </div>
     </div>
   </div>
 
   <script>
-    // Set your special date here (e.g., New Year's Eve)
-    const targetDate = new Date("2025-12-31T23:59:59").getTime();
+    const targetDate = new Date("2025-07-13T09:00:00").getTime();
 
     function updateCountdown() {
       const now = new Date().getTime();
       const distance = targetDate - now;
 
       if (distance < 0) {
-        document.getElementById("countdown").innerHTML = "🎉 The day has arrived!";
+        document.querySelector('.countdown').innerHTML = "🎉 She's here!";
         return;
       }
 
@@ -91,6 +124,5 @@
     updateCountdown();
     setInterval(updateCountdown, 1000);
   </script>
-
 </body>
 </html>
